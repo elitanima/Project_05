@@ -1,29 +1,40 @@
-<template>
-  <div>
-    <h1>Counter: {{ count }}</h1>
-    <button @click="increment">Increase</button>
-  </div>
-</template>
+   <template>
+     <div>
+       <h1>Counter: {{ count }}</h1>
+       <button @click="increment">Increase</button>
+       <button @click="decrement">Decrease</button>
+     </div>
+   </template>
 
-<script>
-import { defineComponent, computed } from 'vue';
-import { useCounterStore } from '../stores/counter';
+   <script>
+   import { defineComponent, computed, onMounted } from 'vue';
+   import { useCounterStore } from '../stores/counter';
 
-export default defineComponent({
-  setup() {
-    const counterStore = useCounterStore();
+   export default defineComponent({
+     setup() {
+       const counterStore = useCounterStore();
 
-    // Используем computed для реактивного отслеживания состояния
-    const count = computed(() => counterStore.count);
+       // Используем computed для реактивного отслеживания состояния
+       const count = computed(() => counterStore.count);
 
-    const increment = () => {
-      counterStore.increment();
-    };
+       // Загружаем текущее значение счетчика при монтировании
+       onMounted(() => {
+         counterStore.fetchCounter();
+       });
 
-    return {
-      count,
-      increment,
-    };
-  },
-});
-</script>
+       // Увеличивает значение счетчика с помощью store
+       const increment = () => {
+         counterStore.increment();
+       };
+       const decrement = () => {
+         counterStore.decrement();
+       };
+
+       return {
+         count,
+         increment,
+         decrement
+       };
+     },
+   });
+   </script>
